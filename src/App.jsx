@@ -71,17 +71,12 @@ const INITIAL_CAIXINHAS = [
   { id: 2, name: 'Viagem dos Sonhos', balance: 2500.00, cdiPercent: 102, goal: 8000 }
 ];
 
-const SHOPPING_STORES = [
-  { id: 1, name: 'Magazine Luiza', category: 'Eletrônicos & Casa', cashback: 8, logoBg: 'bg-blue-600', deal: 'Até 8% de dinheiro de volta' },
-  { id: 2, name: 'Casas Bahia', category: 'Eletrodomésticos', cashback: 10, logoBg: 'bg-red-600', deal: 'Cupom R$50 + 10% cashback' }
-];
-
 const INITIAL_TRANSACTIONS = [
   { id: 101, type: 'pix_received', title: 'Pix recebido de Carlos M.', value: 1500.00, date: 'Hoje, 14:32', category: 'Pix' },
   { id: 102, type: 'card_buy', title: 'Supermercado Pão de Açúcar', value: 215.40, date: 'Ontem, 18:45', category: 'Cartão de Crédito' }
 ];
 
-const formatBRL = (val) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
+const formatBRL = (val) ="> new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
 
 export default function App() {
   const [userName, setUserName] = useState('Natan');
@@ -161,4 +156,80 @@ export default function App() {
                 <span className="text-[10px] text-purple-200 block">Olá,</span>
                 <h1 className="text-sm font-bold flex items-center gap-1">
                   {userName}
-                  <Edit2 className="w-3 h-3
+                  <Edit2 className="w-3 h-3 text-purple-300 cursor-pointer" onClick="{openBalanceEditModal}"/>
+                </h1>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <button onClick={() => setDarkMode(!darkMode)} className="p-2 bg-white/10 rounded-full">
+                {darkMode ? <Sun className="w-4 h-4 text-amber-300"/> : <Moon className="w-4 h-4 text-purple-200"/>}
+              </button>
+              <button onClick={() => setShowBalance(!showBalance)} className="p-2 bg-white/10 rounded-full">
+                {showBalance ? <Eye className="w-4 h-4"/> : <EyeOff className="w-4 h-4"/>}
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <span className="text-purple-200 text-[11px] font-semibold uppercase">Conta</span>
+            <div onClick={openBalanceEditModal} className="inline-flex items-center space-x-2 cursor-pointer rounded-lg p-1 hover:bg-white/10">
+              <span className="text-2xl font-black">{showBalance ? formatBRL(balance) : '•••••'}</span>
+              <span className="text-[10px] font-medium text-purple-200 bg-white/15 px-2 py-0.5 rounded-full">+100% CDI</span>
+            </div>
+          </div>
+        </header>
+
+        <main className="flex-1 overflow-y-auto px-4 py-4 space-y-4 pb-24">
+          <div className="flex space-x-3 overflow-x-auto py-1 select-none">
+            <button onClick={() => setActiveModal('pix')} className="flex flex-col items-center flex-shrink-0">
+              <div className="w-14 h-14 bg-zinc-800 rounded-full flex items-center justify-center text-white">
+                <QrCode className="w-5 h-5"/>
+              </div>
+              <span className="text-[11px] font-semibold mt-1.5">Área Pix</span>
+            </button>
+            <button onClick={() => setActiveModal('my_cards')} className="flex flex-col items-center flex-shrink-0">
+              <div className="w-14 h-14 bg-zinc-800 rounded-full flex items-center justify-center text-white">
+                <CreditCard className="w-5 h-5"/>
+              </div>
+              <span className="text-[11px] font-semibold mt-1.5">Cartões</span>
+            </button>
+          </div>
+
+          <div className={`${darkMode ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-zinc-100'} p-4 rounded-2xl border space-y-3`}>
+            <h2 className="font-bold text-xs">Cartão de crédito</h2>
+            <div>
+              <span className="text-[11px] text-zinc-400 block">Fatura atual</span>
+              <div onClick={openBalanceEditModal} className="text-xl font-black cursor-pointer">
+                {showBalance ? formatBRL(creditUsed) : '•••••'}
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <nav className={`${darkMode ? 'bg-zinc-950 border-zinc-800' : 'bg-white border-zinc-200'} border-t absolute bottom-0 left-0 right-0 max-w-md mx-auto flex justify-around py-2.5 z-30`}>
+          <button onClick={() => setActiveTab('home')} className="flex flex-col items-center text-[#820AD1]">
+            <Home className="w-5 h-5"/>
+            <span className="text-[10px] font-bold">Início</span>
+          </button>
+        </nav>
+
+        {activeModal === 'edit_money' && (
+          <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+            <div className={`${darkMode ? 'bg-zinc-900 text-white' : 'bg-white text-zinc-900'} w-full max-w-md rounded-3xl p-6 space-y-4`}>
+              <div className="flex justify-between items-center">
+                <h3 className="font-bold text-base">Personalizar Valores</h3>
+                <button onClick={closeModal} className="p-1.5 bg-zinc-800/40 rounded-full"><X className="w-4 h-4"/></button>
+              </div>
+              <div className="space-y-3">
+                <input type="text" value={customUserNameInput} onChange={(e) => setCustomUserNameInput(e.target.value)} placeholder="Nome" className="w-full p-3 bg-zinc-800/60 rounded-xl text-sm" />
+                <input type="number" value={customBalanceInput} onChange={(e) => setCustomBalanceInput(e.target.value)} placeholder="Saldo" className="w-full p-3 bg-zinc-800/60 rounded-xl text-sm" />
+              </div>
+              <button onClick={handleSaveCustomMoney} className="w-full bg-[#820AD1] text-white py-3.5 rounded-full font-bold text-xs">Salvar</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
