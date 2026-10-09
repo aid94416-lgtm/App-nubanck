@@ -76,7 +76,7 @@ const INITIAL_TRANSACTIONS = [
   { id: 102, type: 'card_buy', title: 'Supermercado Pão de Açúcar', value: 215.40, date: 'Ontem, 18:45', category: 'Cartão de Crédito' }
 ];
 
-const formatBRL = (val) ="> new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
+const formatBRL = (val) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
 
 export default function App() {
   const [userName, setUserName] = useState('Natan');
@@ -156,7 +156,7 @@ export default function App() {
                 <span className="text-[10px] text-purple-200 block">Olá,</span>
                 <h1 className="text-sm font-bold flex items-center gap-1">
                   {userName}
-                  <Edit2 className="w-3 h-3 text-purple-300 cursor-pointer" onClick="{openBalanceEditModal}"/>
+                  <Edit2 className="w-3 h-3 text-purple-300 cursor-pointer" onClick={openBalanceEditModal}/>
                 </h1>
               </div>
             </div>
